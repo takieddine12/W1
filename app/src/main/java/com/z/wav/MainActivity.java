@@ -109,23 +109,23 @@ public class MainActivity extends AppCompatActivity {
             byte[] processedAudio = new byte[8192]; // Adjust the buffer size as needed
             int bytesReceived;
             String path;
+            byte[] mFile;
 
             do {
                 bytesReceived = soundTouch.getBytes(processedAudio);
-                File folder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-
-                if (!folder.exists()) {
-                    folder.mkdir();
+                File f  = new File(Environment.getExternalStorageDirectory(),"CVS");
+                if(!f.exists()){
+                    f.mkdir();
                 }
 
-                path = folder.getPath() + File.separator + String.valueOf(System.currentTimeMillis());
-                byte[] mFile = new byte[bytesReceived];
-                FileOutputStream fos = new FileOutputStream(folder.getPath());
-                fos.write(mFile);
-                fos.close();
+                path = f.getPath() + File.separator + String.valueOf(System.currentTimeMillis())  + ".wav";
+                mFile = new byte[bytesReceived];
 
             } while (bytesReceived != 0);
 
+            FileOutputStream fos = new FileOutputStream(path);
+            fos.write(mFile);
+            fos.close();
             // RELEASE RESOURCES
             soundTouch.clearBuffer();
 
