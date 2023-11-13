@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -26,6 +27,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!-- Required: set your sentry.io project identifier (DSN) -->
+        <meta-data android:name="io.sentry.dsn" android:value="https://b05d3863819371aeb882026617fdfeef@o4505944628854784.ingest.sentry.io/4505944629772288" />
+
+        <!-- enable automatic breadcrumbs for user interactions (clicks, swipes, scrolls) -->
+        <meta-data android:name="io.sentry.traces.user-interaction.enable" android:value="true" />
+        <!-- enable screenshot for crashes -->
+        <meta-data android:name="io.sentry.attach-screenshot" android:value="true" />
+        <!-- enable view hierarchy for crashes -->
+        <meta-data android:name="io.sentry.attach-view-hierarchy" android:value="true" />
+
+        <!-- enable the performance API by setting a sample-rate, adjust in production env -->
+        <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
+        <!-- enable profiling when starting transactions, adjust in production env -->
+        <meta-data android:name="io.sentry.traces.profiling.sample-rate" android:value="1.0" />
     </application>
 
 </manifest>
