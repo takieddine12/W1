@@ -3,18 +3,6 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-//        maven {
-//            name = "TarsosDSP repository"
-//            url = "https://mvn.0110.be/releases"
-//        }
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/JorenSix/TarsosDSP"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
     }
 }
 dependencyResolutionManagement {
@@ -22,24 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-//        maven {
-//            name = "TarsosDSP repository"
-//            url = "https://mvn.0110.be/releases"
-//        }
-
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/JorenSix/TarsosDSP"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
     }
 }
 rootProject.name = "Wav"
 include ':app'
-include ':core'
-include ':jvm'
 include ':lib-soundtouch'
-include ':lib-soundtouch-android'

@@ -1,25 +1,22 @@
 package com.z.wav;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileUtils;
-import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.github.qingmei2.soundtouch.SoundTouch;
 
@@ -27,9 +24,10 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity {
     private static final int PICK_AUDIO_REQUEST_CODE = 1;
@@ -136,32 +134,44 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void pickFile(){
+    private void pickFile() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("audio/*");
-        startActivityForResult(intent,PICK_AUDIO_REQUEST_CODE);
+        startActivityForResult(intent, PICK_AUDIO_REQUEST_CODE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_AUDIO_REQUEST_CODE && resultCode == RESULT_OK){
+        if (requestCode == PICK_AUDIO_REQUEST_CODE && resultCode == RESULT_OK) {
             assert data != null;
-            file = new File(getRealPathFromUri(data.getData()));
+            Uri uri = data.getData();
+            if (uri != null) {
+                try {
+                    InputStream inputStream = getContentResolver().openInputStream(uri);
+                    file = createFileFromInputStream(inputStream);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Handle the exception
+                }
+            }
         }
     }
 
-    private String getRealPathFromUri(Uri uri) {
-        String[] projection = {MediaStore.Audio.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-            cursor.moveToFirst();
-            String filePath = cursor.getString(columnIndex);
-            cursor.close();
-            return filePath;
-        } else {
-            return uri.getPath(); // Fallback to the original URI.getPath() method
+    private File createFileFromInputStream(InputStream inputStream) throws IOException {
+        File file = new File(getCacheDir(), "temp_audio_file.wav");
+        OutputStream outputStream = new FileOutputStream(file);
+        byte[] buffer = new byte[4 * 1024]; // Adjust the buffer size as needed
+
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outputStream.write(buffer, 0, bytesRead);
         }
+
+        outputStream.flush();
+        outputStream.close();
+        inputStream.close();
+
+        return file;
     }
 }

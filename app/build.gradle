@@ -30,14 +30,9 @@ android {
 
 dependencies {
 
-
-//    implementation 'be.tarsos.dsp:core:2.5'
-//    implementation 'be.tarsos.dsp:jvm:2.5'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation project(path: ':jvm')
-    implementation project(path: ':core')
     implementation project(path: ':lib-soundtouch')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
